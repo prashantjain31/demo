@@ -1,7 +1,13 @@
 package com.example.demo.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -13,65 +19,62 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="employee")
+@JsonIdentityInfo(
+	    generator = ObjectIdGenerators.PropertyGenerator.class, 
+	    property = "id")
 public class Employee implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String level;
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "person_id", referencedColumnName = "id")
-	private Person person;
+	private String name;
+	private Role role;
 	
 	@ManyToOne
 	@JoinColumn(name = "company_id")
+//	@JsonManagedReference
 	private Company company;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
 			name="employee_team",
 			joinColumns = @JoinColumn(name="employee_id"),
 			inverseJoinColumns = @JoinColumn(name="team_id"))
+//	@JsonManagedReference
 	Set<Team> joinedTeams;
-	
+
 	public Employee() {
-		
+		super();
 	}
-	public Employee(Long id, String level, Person person, Company company, Set<Team> joinedTeams) {
+	public Employee(Long id, String name, Company company, Set<Team> joinedTeams, Role role) {
 		super();
 		this.id = id;
-		this.level = level;
-		this.person = person;
+		this.name = name;
 		this.company = company;
 		this.joinedTeams = joinedTeams;
+		this.role = role;
 	}
-
+	
+	
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getLevel() {
-		return level;
+	public String getName() {
+		return name;
 	}
-	public void setLevel(String level) {
-		this.level = level;
-	}
-	public Person getPerson() {
-		return person;
-	}
-	public void setPerson(Person person) {
-		this.person = person;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public Company getCompany() {
 		return company;
@@ -84,6 +87,23 @@ public class Employee implements Serializable{
 	}
 	public void setJoinedTeams(Set<Team> joinedTeams) {
 		this.joinedTeams = joinedTeams;
+	}
+	public void setJoinedTeam(Team team) {
+		if(this.joinedTeams == null) {
+			this.joinedTeams = new HashSet<Team>();
+		}
+		this.joinedTeams.add(team);
+	}
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(id);
 	}
 	
 }
