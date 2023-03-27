@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.example.demo.helpers.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -76,14 +77,22 @@ public class Employee implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Company getCompany() {
-		return company;
+	public Long getCompany() {
+		if(company == null) {
+			return null;
+		}
+		return company.getId();
 	}
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	public Set<Team> getJoinedTeams() {
-		return joinedTeams;
+	public Set<Long> getJoinedTeams() {
+		Set<Long> teamIds = new HashSet<Long>();
+		for(Team team: joinedTeams) {
+			teamIds.add(team.getId());
+		}
+		return teamIds;
+//		return joinedTeams;
 	}
 	public void setJoinedTeams(Set<Team> joinedTeams) {
 		this.joinedTeams = joinedTeams;

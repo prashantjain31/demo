@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.helpers.LongRequest;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
-import com.example.demo.model.LongRequest;
 import com.example.demo.service.CompanyService;
 
 @RestController
@@ -58,11 +58,11 @@ public class CompanyController {
 		}
 	}
 	
-//	@PostMapping("/{companyId}/addEmployee")
-//	public Company addEmployee(@PathVariable("companyId") Long companyId, @RequestBody LongRequest employeeId) {
-//		if(employeeId != null) {
-//			return companyService.addEmployee(companyId, employeeId.getLongValue());
-//		}
-//		return null;
-//	}
+	@PostMapping("/{companyId}/addEmployee")
+	public Company addEmployee(@PathVariable("companyId") Long companyId, @RequestBody LongRequest employeeId) {
+		if(employeeId != null) {
+			return companyService.addEmployee(companyId, employeeId.getLongValue());
+		}
+		return null;
+	}
 }

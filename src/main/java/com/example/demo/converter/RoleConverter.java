@@ -2,7 +2,7 @@ package com.example.demo.converter;
 
 import java.util.stream.*;
 
-import com.example.demo.model.Role;
+import com.example.demo.helpers.Role;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

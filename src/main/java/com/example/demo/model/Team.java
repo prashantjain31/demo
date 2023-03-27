@@ -15,7 +15,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -38,13 +40,18 @@ public class Team implements Serializable{
 //	@JsonBackReference
 	Set<Employee> joins;
 	
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company;
+	
 	public Team() {
 		
 	}
-	public Team(Long id, String teamName, Set<Employee> joins) {
+	public Team(Long id, String teamName, Set<Employee> joins, Company company) {
 		this.id = id;
 		this.teamName = teamName;
 		this.joins = joins;
+		this.company = company;
 	}
 	
 	public Long getId() {
@@ -59,8 +66,13 @@ public class Team implements Serializable{
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
 	}
-	public Set<Employee> getJoins() {
-		return joins;
+	public Set<Long> getJoins() {
+		Set<Long> employeeIds = new HashSet<Long>();
+		for(Employee employee : joins) {
+			employeeIds.add(employee.getId());
+		}
+		return employeeIds;
+//		return joins;
 	}
 	public void setJoins(Set<Employee> joins) {
 		this.joins = joins;
@@ -70,6 +82,15 @@ public class Team implements Serializable{
 			this.joins = new HashSet<Employee>();
 		}
 		this.joins.add(employee);
+	}
+	public Long getCompany() {
+		if(company == null) {
+			return null;
+		}
+		return company.getId();
+	}
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 	@Override

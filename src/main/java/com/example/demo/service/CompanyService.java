@@ -48,7 +48,7 @@ public class CompanyService {
 			Company oldCompany = companyRepo.findById(companyId).orElse(null);
 			if(oldCompany != null) {
 				oldCompany.setCompanyName(company.getCompanyName());
-				oldCompany.setEmployees(company.getEmployees());
+//				oldCompany.setEmployees(company.getEmployees());
 				return companyRepo.save(oldCompany);
 			}
 		}
@@ -61,20 +61,22 @@ public class CompanyService {
 		}
 	}
 
-//	public Company addEmployee(Long companyId, Long employeeId) {
-//		Company company = companyRepo.findById(companyId).orElse(null);
-//		if(company != null) {
-//			Employee employee = employeeRepo.findById(employeeId).orElse(null);
-//			if(employee == null) {
-//				return company;
-//			}
-//			if(company.getEmployees() == null) {
-//				company.setEmployees(new HashSet<Employee>());
-//			}
-//			company.setEmployee(employee);
-//			return companyRepo.save(company);
-//		}
-//		return null;
-//	}
+	@CachePut(value="companies", key="#companyId")
+	public Company addEmployee(Long companyId, Long employeeId) {
+		Company company = companyRepo.findById(companyId).orElse(null);
+		if(company != null) {
+			Employee employee = employeeRepo.findById(employeeId).orElse(null);
+			if(employee == null) {
+				return company;
+			}
+			if(company.getEmployees() == null) {
+				company.setEmployees(new HashSet<Employee>());
+			}
+			employee.setCompany(company);
+			company.setEmployee(employee);
+			return companyRepo.save(company);
+		}
+		return null;
+	}
 	
 }

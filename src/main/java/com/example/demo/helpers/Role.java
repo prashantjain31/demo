@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.helpers;
 
 public enum Role {
 	INTERN("Intern"), MANAGER("Manager"), LEADER("Leader"), TESTER("Tester");

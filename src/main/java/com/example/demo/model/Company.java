@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -39,14 +40,18 @@ public class Company implements Serializable{
 	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Employee> employees;
 	
+	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Team> teams;
+	
 	public Company() {
 		
 	}
-	public Company(Long id, String companyName, Set<Employee> employees) {
+	public Company(Long id, String companyName, Set<Employee> employees, Set<Team> teams) {
 		super();
 		this.id = id;
 		this.companyName = companyName;
 		this.employees = employees;
+		this.teams = teams;
 	}
 	
 	public Long getId() {
@@ -61,15 +66,41 @@ public class Company implements Serializable{
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	public Set<Employee> getEmployees() {
-		return employees;
+	public Set<Long> getEmployees() {
+		Set<Long> employeeIds = new HashSet<Long>();
+		for(Employee employee : employees) {
+			employeeIds.add(employee.getId());
+		}
+		return employeeIds;
+//		return employees;
 	}
 	public void setEmployees(Set<Employee> employees) {
 		this.employees = employees;
 	}
 	public void setEmployee(Employee employee) {
+		if(this.employees == null) {
+			this.employees = new HashSet<Employee>();
+		}
 		this.employees.add(employee);
 	}
+	public Set<Long> getTeams() {
+		Set<Long> teamIds = new HashSet<Long>();
+		for(Team team : teams) {
+			teamIds.add(team.getId());
+		}
+		return teamIds;
+//		return teams;
+	}
+	public void setTeams(Set<Team> teams) {
+		this.teams = teams;
+	}
+	public void setTeam(Team team) {
+		if(this.teams == null) {
+			this.teams = new HashSet<Team>();
+		}
+		this.teams.add(team);
+	}
+	
 	
 	@Override
 	public String toString() {

@@ -1,12 +1,14 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
@@ -45,8 +47,8 @@ public class EmployeeService {
 		Employee emp = employeeRepo.findById(employeeId).orElse(null);
 		if(emp != null) {
 			emp.setName(employee.getName());
-			emp.setJoinedTeams(employee.getJoinedTeams());
-			emp.setCompany(employee.getCompany());
+//			emp.setJoinedTeams(employee.getJoinedTeams());
+//			emp.setCompany(employee.getCompany());
 			emp.setRole(employee.getRole());
 			return employeeRepo.save(emp);
 		}
@@ -75,6 +77,10 @@ public class EmployeeService {
 			return employeeRepo.save(employee);
 		}
 		return null;
+	}
+	
+	public Set<Employee> getEmployeeByCompany(Long companyId) {
+		return employeeRepo.findByCompanyId(companyId);
 	}
 
 }
