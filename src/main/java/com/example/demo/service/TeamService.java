@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.manager.TeamManager;
 import com.example.demo.model.Employee;
 import com.example.demo.model.Team;
 import com.example.demo.repo.CompanyRepo;
@@ -20,11 +21,8 @@ public class TeamService {
 	@Autowired
 	TeamRepo teamRepo;
 	@Autowired
-	EmployeeRepo employeeRepo;
-	@Autowired
-	CompanyRepo companyRepo;
+	TeamManager teamManager;
 	
-//	@Cacheable("teams")
 	public List<Team> getTeams() {
 		return teamRepo.findAll();
 	}
@@ -65,26 +63,12 @@ public class TeamService {
 	
 	@CachePut(value="teams", key="#teamId")
 	public Team addEmployee(Long teamId, Long employeeId) {
-		Team team = teamRepo.findById(teamId).orElse(null);
-		if(team != null) {
-			Employee employee = employeeRepo.findById(employeeId).orElse(null);
-			if(employee != null) {
-				employee.setJoinedTeam(team);
-			}
-			team.setJoin(employee);
-			return teamRepo.save(team);
-		}
-		return null;
+		return teamManager.addEmployee(teamId, employeeId);
 	}
 	
 	@CachePut(value="teams", key="#teamId") 
 	public Team addCompany(Long teamId, Long companyId){
-		Team team = teamRepo.findById(teamId).orElse(null);
-		if(team != null) {
-			team.setCompany(companyRepo.findById(companyId).orElse(null));
-			return teamRepo.save(team);
-		}
-		return null;
+		return teamManager.addCompany(teamId, companyId);
 	}
 
 }

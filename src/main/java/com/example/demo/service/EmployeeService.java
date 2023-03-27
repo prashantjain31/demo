@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.demo.manager.EmployeeManager;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
 import com.example.demo.repo.CompanyRepo;
@@ -23,9 +24,7 @@ public class EmployeeService {
 	@Autowired
 	EmployeeRepo employeeRepo;
 	@Autowired
-	CompanyRepo companyRepo;
-	@Autowired
-	TeamRepo teamRepo;
+	EmployeeManager employeeManager;
 	
 	public List<Employee> getEmployees() {
 		return employeeRepo.findAll();
@@ -61,22 +60,12 @@ public class EmployeeService {
 	
 	@CachePut(value="employees", key="#employeeId")
 	public Employee addCompany(Long employeeId, Long companyId) {
-		Employee employee = employeeRepo.findById(employeeId).orElse(null);
-		if(employee != null) {
-			employee.setCompany(companyRepo.findById(companyId).orElse(null));
-			return employeeRepo.save(employee);
-		}
-		return null;
+		return employeeManager.addCompany(employeeId, companyId);
 	}
 	
 	@CachePut(value="employees", key="#employeeId")
 	public Employee addTeam(Long employeeId, Long teamId) {
-		Employee employee = employeeRepo.findById(employeeId).orElse(null);
-		if(employee != null) {
-			employee.setJoinedTeam(teamRepo.findById(teamId).orElse(null));
-			return employeeRepo.save(employee);
-		}
-		return null;
+		return employeeManager.addTeam(employeeId, teamId);
 	}
 	
 	public Set<Employee> getEmployeeByCompany(Long companyId) {

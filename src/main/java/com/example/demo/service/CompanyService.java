@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.manager.CompanyManager;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
 import com.example.demo.repo.CompanyRepo;
@@ -21,9 +22,9 @@ public class CompanyService {
 	@Autowired
 	CompanyRepo companyRepo;
 	@Autowired
-	EmployeeRepo employeeRepo;
+	CompanyManager companyManager;
 	
-//	@Cacheable("companies")
+
 	public List<Company> getCompanies() {
 		return companyRepo.findAll();
 	}
@@ -63,20 +64,7 @@ public class CompanyService {
 
 	@CachePut(value="companies", key="#companyId")
 	public Company addEmployee(Long companyId, Long employeeId) {
-		Company company = companyRepo.findById(companyId).orElse(null);
-		if(company != null) {
-			Employee employee = employeeRepo.findById(employeeId).orElse(null);
-			if(employee == null) {
-				return company;
-			}
-			if(company.getEmployees() == null) {
-				company.setEmployees(new HashSet<Employee>());
-			}
-			employee.setCompany(company);
-			company.setEmployee(employee);
-			return companyRepo.save(company);
-		}
-		return null;
+		return companyManager.addEmployee(companyId, employeeId);
 	}
 	
 }
