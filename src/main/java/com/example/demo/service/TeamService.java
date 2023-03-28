@@ -35,14 +35,14 @@ public class TeamService {
 		teamRepo.deleteAll();
 	}
 	
-	@Cacheable("teams")
+//	@Cacheable("teams")
 	public Team getTeam(Long teamId) {
 		if(teamId != null) {
 			return teamRepo.findById(teamId).orElse(null);
 		}
 		return null;
 	}
-	@CachePut(value="teams", key="#teamId")
+//	@CachePut(value="teams", key="#teamId")
 	public Team updateTeam(Long teamId, Team team) {
 		if(teamId != null) {
 			Team oldTeam = teamRepo.findById(teamId).orElse(null);
@@ -54,19 +54,20 @@ public class TeamService {
 		}
 		return null;
 	}
-	@CacheEvict("teams")
+//	@CacheEvict("teams")
 	public void deleteTeam(Long teamId) {
 		if(teamId != null) {
 			teamRepo.deleteById(teamId);
 		}
 	}
 	
-	@CachePut(value="teams", key="#teamId")
+//	@CachePut(value="teams", key="#teamId")
 	public Team addEmployee(Long teamId, Long employeeId) {
+		System.out.println("inside service");
 		return teamManager.addEmployee(teamId, employeeId);
 	}
 	
-	@CachePut(value="teams", key="#teamId") 
+//	@CachePut(value="teams", key="#teamId") 
 	public Team addCompany(Long teamId, Long companyId){
 		return teamManager.addCompany(teamId, companyId);
 	}

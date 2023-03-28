@@ -1,12 +1,16 @@
 package com.example.demo.manager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
+import com.example.demo.model.Team;
 import com.example.demo.repo.CompanyRepo;
 import com.example.demo.repo.EmployeeRepo;
 import com.example.demo.repo.TeamRepo;
 
+@Service
 public class EmployeeManager {
 	
 	@Autowired
@@ -19,8 +23,15 @@ public class EmployeeManager {
 	public Employee addTeam(Long employeeId, Long teamId) {
 		Employee employee = employeeRepo.findById(employeeId).orElse(null);
 		if(employee != null) {
-			employee.setJoinedTeam(teamRepo.findById(teamId).orElse(null));
-			return employeeRepo.save(employee);
+			Team team = teamRepo.findById(teamId).orElse(null);
+			if(team != null) {
+				Company teamCom = companyRepo.findById(team.getCompany()).orElse(null);
+				Company employeeCom = companyRepo.findById(employee.getCompany()).orElse(null);
+				if(teamCom != null && employeeCom != null && teamCom.getId() == employeeCom.getId()) {
+					employee.setJoinedTeam(team);
+					return employeeRepo.save(employee);
+				}
+			}
 		}
 		return null;
 	}

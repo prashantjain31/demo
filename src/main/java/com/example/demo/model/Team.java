@@ -36,7 +36,7 @@ public class Team implements Serializable{
 	private Long id;
 	private String teamName;
 	
-	@ManyToMany(mappedBy = "joinedTeams", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "joinedTeams", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //	@JsonBackReference
 	Set<Employee> joins;
 	
