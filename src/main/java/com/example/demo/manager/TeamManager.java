@@ -10,6 +10,8 @@ import com.example.demo.repo.CompanyRepo;
 import com.example.demo.repo.EmployeeRepo;
 import com.example.demo.repo.TeamRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class TeamManager {
 	
@@ -20,6 +22,7 @@ public class TeamManager {
 	@Autowired
 	CompanyRepo companyRepo;
 	
+	@Transactional
 	public Team addCompany(Long teamId, Long companyId){
 		Team team = teamRepo.findById(teamId).orElse(null);
 		if(team != null) {
@@ -28,7 +31,7 @@ public class TeamManager {
 		}
 		return null;
 	}
-	
+	@Transactional
 	public Team addEmployee(Long teamId, Long employeeId) {
 		System.out.println("inside manager");
 		Team team = teamRepo.findById(teamId).orElse(null);

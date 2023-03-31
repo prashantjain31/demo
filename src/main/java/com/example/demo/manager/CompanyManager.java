@@ -10,6 +10,8 @@ import com.example.demo.model.Employee;
 import com.example.demo.repo.CompanyRepo;
 import com.example.demo.repo.EmployeeRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CompanyManager {
 	@Autowired
@@ -17,6 +19,7 @@ public class CompanyManager {
 	@Autowired
 	EmployeeRepo employeeRepo;
 	
+	@Transactional
 	public Company addEmployee(Long companyId, Long employeeId) {
 		Company company = companyRepo.findById(companyId).orElse(null);
 		if(company != null) {
