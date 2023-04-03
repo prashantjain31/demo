@@ -5,6 +5,7 @@ import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.helpers.ResourceNotFoundExceptionHandler;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
 import com.example.demo.repo.CompanyRepo;
@@ -21,9 +22,11 @@ public class CompanyManager {
 	
 	@Transactional
 	public Company addEmployee(Long companyId, Long employeeId) {
-		Company company = companyRepo.findById(companyId).orElse(null);
+		Company company = companyRepo.findById(companyId)
+				.orElseThrow(() -> new ResourceNotFoundExceptionHandler("Company with id: " + companyId + " not found"));
 		if(company != null) {
-			Employee employee = employeeRepo.findById(employeeId).orElse(null);
+			Employee employee = employeeRepo.findById(employeeId)
+					.orElseThrow(() -> new ResourceNotFoundExceptionHandler("Employee with id: " + employeeId + " not found"));
 			if(employee == null) {
 				return company;
 			}

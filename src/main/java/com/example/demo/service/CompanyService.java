@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.helpers.ResourceNotFoundExceptionHandler;
 import com.example.demo.manager.CompanyManager;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
@@ -39,14 +40,14 @@ public class CompanyService {
 	@Cacheable("companies")
 	public Company getCompany(Long companyId) {
 		if(companyId != null) {
-			return companyRepo.findById(companyId).orElse(null);
+			return companyRepo.findById(companyId).orElseThrow(() -> new ResourceNotFoundExceptionHandler("Company with id: " + companyId + " not found"));
 		}
 		return null;
 	}
 	@CachePut(value="companies", key="#companyId")
 	public Company updateCompany(Long companyId, Company company) {
 		if(companyId != null) {
-			Company oldCompany = companyRepo.findById(companyId).orElse(null);
+			Company oldCompany = companyRepo.findById(companyId).orElseThrow(() -> new ResourceNotFoundExceptionHandler("Company with id: " + companyId + " not found"));
 			if(oldCompany != null) {
 				oldCompany.setCompanyName(company.getCompanyName());
 //				oldCompany.setEmployees(company.getEmployees());

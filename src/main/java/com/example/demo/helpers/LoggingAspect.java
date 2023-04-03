@@ -18,6 +18,11 @@ public class LoggingAspect {
     public void logBefore(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
+//        System.out.println(joinPoint.getSignature());
+//        System.out.println(methodName);
+//        System.out.println(joinPoint.getTarget());
+//        System.out.println(joinPoint.getTarget().getClass());
+//        System.out.println(className);
         log.info("Executing " + className + "." + methodName);
     }
 	

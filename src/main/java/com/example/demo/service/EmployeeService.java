@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.demo.helpers.ResourceNotFoundExceptionHandler;
 import com.example.demo.manager.EmployeeManager;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
@@ -39,11 +40,11 @@ public class EmployeeService {
 	
 	@Cacheable("employees")
 	public Employee getEmployee(Long employeeId) {
-		return employeeRepo.findById(employeeId).orElse(null);
+		return employeeRepo.findById(employeeId).orElseThrow(() -> new ResourceNotFoundExceptionHandler("Employee with id: " + employeeId + " not found"));
 	}
 	@CachePut(value="employees", key="#employeeId")
 	public Employee updateEmployee(Long employeeId, Employee employee) {
-		Employee emp = employeeRepo.findById(employeeId).orElse(null);
+		Employee emp = employeeRepo.findById(employeeId).orElseThrow(() -> new ResourceNotFoundExceptionHandler("Employee with id: " + employeeId + " not found"));
 		if(emp != null) {
 			emp.setName(employee.getName());
 //			emp.setJoinedTeams(employee.getJoinedTeams());

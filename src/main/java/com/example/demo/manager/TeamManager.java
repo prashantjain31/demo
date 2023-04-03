@@ -3,6 +3,7 @@ package com.example.demo.manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.helpers.ResourceNotFoundExceptionHandler;
 import com.example.demo.model.Company;
 import com.example.demo.model.Employee;
 import com.example.demo.model.Team;
@@ -24,9 +25,11 @@ public class TeamManager {
 	
 	@Transactional
 	public Team addCompany(Long teamId, Long companyId){
-		Team team = teamRepo.findById(teamId).orElse(null);
+		Team team = teamRepo.findById(teamId)
+				.orElseThrow(() -> new ResourceNotFoundExceptionHandler("Team with id: " + teamId + " not found"));
 		if(team != null) {
-			team.setCompany(companyRepo.findById(companyId).orElse(null));
+			team.setCompany(companyRepo.findById(companyId)
+					.orElseThrow(() -> new ResourceNotFoundExceptionHandler("Company with id: " + companyId + " not found")));
 			return teamRepo.save(team);
 		}
 		return null;
@@ -34,10 +37,12 @@ public class TeamManager {
 	@Transactional
 	public Team addEmployee(Long teamId, Long employeeId) {
 		System.out.println("inside manager");
-		Team team = teamRepo.findById(teamId).orElse(null);
+		Team team = teamRepo.findById(teamId)
+				.orElseThrow(() -> new ResourceNotFoundExceptionHandler("Team with id: " + teamId + " not found"));
 		System.out.println("team found");
 		if(team != null) {
-			Employee employee = employeeRepo.findById(employeeId).orElse(null);
+			Employee employee = employeeRepo.findById(employeeId)
+					.orElseThrow(() -> new ResourceNotFoundExceptionHandler("Employee with id: " + employeeId + " not found"));
 			System.out.println("employee found");
 			if(employee != null) {
 				Company teamCom = companyRepo.findById(team.getCompany()).orElse(null);

@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.helpers.ResourceNotFoundExceptionHandler;
 import com.example.demo.manager.TeamManager;
 import com.example.demo.model.Employee;
 import com.example.demo.model.Team;
@@ -38,14 +39,14 @@ public class TeamService {
 //	@Cacheable("teams")
 	public Team getTeam(Long teamId) {
 		if(teamId != null) {
-			return teamRepo.findById(teamId).orElse(null);
+			return teamRepo.findById(teamId).orElseThrow(() -> new ResourceNotFoundExceptionHandler("Team with id: " + teamId + " not found"));
 		}
 		return null;
 	}
 //	@CachePut(value="teams", key="#teamId")
 	public Team updateTeam(Long teamId, Team team) {
 		if(teamId != null) {
-			Team oldTeam = teamRepo.findById(teamId).orElse(null);
+			Team oldTeam = teamRepo.findById(teamId).orElseThrow(() -> new ResourceNotFoundExceptionHandler("Team with id: " + teamId + " not found"));
 			if(oldTeam != null) {
 //				oldTeam.setJoins(team.getJoins());
 				oldTeam.setTeamName(team.getTeamName());
